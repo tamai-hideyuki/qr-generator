@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import './QRGenerator.css';
 
 export default function QRGenerator() {
     const [url, setUrl] = useState('');
@@ -12,7 +13,6 @@ export default function QRGenerator() {
     // URL の有効性をチェックする関数
     const isValidUrl = (input: string): boolean => {
         try {
-            // URL コンストラクタでチェック（https:// や http:// を含める必要）
             new URL(input);
             return true;
         } catch {
@@ -20,7 +20,7 @@ export default function QRGenerator() {
         }
     };
 
-    // 入力 URL が変更されるたびにバリデーションエラーをリセット
+    // 入力 URL が変更されるたびにエラーメッセージ・QR画像をリセット
     useEffect(() => {
         setValidationError(null);
         setApiError(null);
@@ -39,7 +39,7 @@ export default function QRGenerator() {
             return;
         }
 
-        // バリデーションOKなら、QR 生成処理へ
+        // バリデーションOKなら QR 生成処理へ
         setIsLoading(true);
         setApiError(null);
         setQrBlobUrl(null);
@@ -51,21 +51,16 @@ export default function QRGenerator() {
                 { responseType: 'blob' }
             );
 
-            // レスポンスコードが 200 以外でも catch に飛ぶので、ここでは Blob 生成だけ
             const blob = new Blob([response.data], { type: 'image/png' });
             const objectUrl = URL.createObjectURL(blob);
             setQrBlobUrl(objectUrl);
         } catch (e: any) {
             console.error(e);
-            // Axios のエラーかどうかを判定
             if (e.response) {
-                // サーバーがエラーコードを返してきた
                 setApiError(`サーバーエラー: ${e.response.status}`);
             } else if (e.request) {
-                // リクエストは送ったがレスポンスが帰ってこない
                 setApiError('サーバーと通信できません。ネットワークをご確認ください。');
             } else {
-                // 送信前のエラー
                 setApiError('不明なエラーが発生しました。');
             }
         } finally {
@@ -82,47 +77,50 @@ export default function QRGenerator() {
     };
 
     return (
-        <div className="flex flex-col items-center p-4">
-            <h1 className="text-2xl font-bold mb-4">QRコードジェネレーター</h1>
+        <div className="qr-container">
+            <h1 className="qr-title">QRコードジェネレーター</h1>
 
-            <div className="flex gap-2 mb-4">
+            <div className="qr-input-group">
                 <input
                     type="text"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     placeholder="QRコードにしたいURLを入力してください"
-                    className="border border-gray-300 px-4 py-2 rounded w-80"
+                    className="qr-input"
                 />
                 <button
                     onClick={handleGenerate}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+                    className={`qr-button generate-button ${isLoading ? 'disabled' : ''}`}
                     disabled={isLoading}
+                    aria-label="QRコードを生成する"
                 >
                     {isLoading ? '生成中…' : '生成'}
                 </button>
             </div>
 
-            {/* バリデーションエラーの表示 */}
             {validationError && (
-                <p className="text-red-500 mb-4">{validationError}</p>
+                <p className="qr-error validation-error">{validationError}</p>
             )}
 
-            {/* API エラーの表示 */}
-            {apiError && <p className="text-red-500 mb-4">{apiError}</p>}
+            {apiError && (
+                <p className="qr-error api-error">{apiError}</p>
+            )}
 
-            {/* QRコード表示 & ダウンロードボタン */}
             {qrBlobUrl && (
-                <div className="flex flex-col items-center">
-                    <img
-                        src={qrBlobUrl}
-                        alt="Generated QR Code"
-                        className="border border-gray-300"
-                        width={256}
-                        height={256}
-                    />
+                <div className="qr-result-group">
+                    <div className="qr-image-wrapper">
+                        <img
+                            src={qrBlobUrl}
+                            alt="Generated QR Code"
+                            className="qr-image"
+                            width={256}
+                            height={256}
+                        />
+                    </div>
                     <button
                         onClick={handleDownload}
-                        className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        className="qr-button download-button"
+                        aria-label="QRコードをダウンロードする"
                     >
                         ダウンロード
                     </button>

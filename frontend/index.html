@@ -2,14 +2,26 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8" />
-    <title>QRコードジェネレーター</title>
-    <!-- Vite の場合、この辺りに必要ならメタ情報やfaviconをここに -->
+    <!-- ファビコン（任意） -->
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- マニフェストファイルへのリンク -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Android/Chrome でステータスバーなどをテーマカラーにする -->
+    <meta name="theme-color" content="#3182ce" />
+
+    <!-- iOS 向けの設定（ホーム画面に追加した際のタイトルなど） -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="QRコード変換君" />
+    <!-- iOS のホーム画面アイコン -->
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QRコード変換君</title>
 </head>
 <body>
-<!-- ここに React アプリをマウントする -->
 <div id="root"></div>
-
-<!-- Vite のエントリーとして main.tsx を読み込む -->
 <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
