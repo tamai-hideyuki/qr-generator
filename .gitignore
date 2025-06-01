@@ -34,3 +34,8 @@ poetry.lock
 # ====== Docker (optional) ======
 *.pid
 docker-compose.override.yml
+# Docker-generated files
+**/__pycache__/
+**/node_modules/
+**/*.log
+docker/.env

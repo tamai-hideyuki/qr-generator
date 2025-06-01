@@ -31,28 +31,31 @@
 
 ## 初期構成案構造
 ```
-qr-generator-app/
-├── backend/
-│   ├── app/
-│   │   ├── main.py               
-│   │   ├── routes/
-│   │   │   └── qr.py             
-│   │   └── utils/
-│   │       └── qr_generator.py   # QRコード生成ロジック（Pillow使用）
-│   ├── requirements.txt         
-│   └── uvicorn_config.py         
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   │   └── QRGenerator.tsx  
-│   │   └── App.tsx
-│   ├── index.html
-│   └── vite.config.ts          
-│
-├── .gitignore
-├── README.md
-└── docker-compose.yml           # フロント・バックを同時起動する場合
-
+.
+├── backend
+│   ├── app
+│   │   ├── main.py
+│   │   ├── routes
+│   │   │   └── qr.py
+│   │   └── utils
+│   │       └── qr_generator.py
+│   ├── requirements.txt
+│   └── uvicorn_config.py
+├── docker
+│   ├── backend
+│   │   └── Dockerfile
+│   ├── docker-compose.yml
+│   ├── frontend
+│   │   └── Dockerfile
+│   └── nginx
+│       └── default.conf
+├── frontend
+│   ├── index.html
+│   ├── public
+│   ├── src
+│   │   ├── App.tsx
+│   │   └── components
+│   │       └── QRGenerator.tsx
+│   └── vite.config.ts
+└── README.md
 ```
