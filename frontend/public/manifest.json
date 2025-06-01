@@ -1,0 +1,22 @@
+{
+  "name": "QRコード変換君",
+  "short_name": "QRジェネレータ",
+  "description": "ブラウザ上でQRコードを生成し、ダウンロードできるPWA",
+  "lang": "ja",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7fafc",
+  "theme_color": "#3182ce",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
