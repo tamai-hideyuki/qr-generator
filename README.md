@@ -1,4 +1,32 @@
-### 全体マイルストーンとブランチ構成
+## 機能：**任意のURLからQRコードを作成し、ダウンロード可能にします。**
+
+
+# 技術スタック
+### フロントエンド
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+
+### バックエンド 
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+
+### QRコード生成周り 
+![qrcode](https://img.shields.io/badge/qrcode-000000?logo=python&logoColor=white)
+![Pillow](https://img.shields.io/badge/Pillow-990000?logo=python&logoColor=white)
+
+### 通信 
+![REST API](https://img.shields.io/badge/REST_API-007ACC?logo=rest&logoColor=white)
+
+| 領域    | 使用技術                          | 備考                               |
+| ----- | ----------------------------- | -------------------------------- |
+| フロント  | React（Vite or Next.js）        | URL入力 → APIにPOST → Blob受け取り表示＋DL |
+| バックエンド | FastAPI + `qrcode` + `Pillow` | PNGをメモリ上で生成し、Base64またはバイナリ返却     |
+| QR生成 | Pythonで確実・カスタマイズ可能            | 色・誤り訂正・サイズも対応                    |
+| 通信  | REST API（POST）                | `/generate_qr` にURLを送信           |
+
+
+
+
 ##  QRコードジェネレーター：開発マイルストーン一覧
 
 | No | マイルストーン                        | ブランチ名                      | 内容                                                                 |
@@ -13,16 +41,6 @@
 | 8  |  UI微調整＋最終仕上げ                 | `feature/ui-polish`        | Tailwindで微調整、アクセシビリティ対応など                                      |
 
 
-## 概要：
-**任意のURLからQRコードを作成し、ダウンロード可能にします。**
-
-## 技術スタック
-| 領域    | 使用技術                          | 備考                               |
-| ----- | ----------------------------- | -------------------------------- |
-| フロント  | React（Vite or Next.js）        | URL入力 → APIにPOST → Blob受け取り表示＋DL |
-| バックエンド | FastAPI + `qrcode` + `Pillow` | PNGをメモリ上で生成し、Base64またはバイナリ返却     |
-| QR生成 | Pythonで確実・カスタマイズ可能            | 色・誤り訂正・サイズも対応                    |
-| 通信  | REST API（POST）                | `/generate_qr` にURLを送信           |
 
 
 ## 使い方
@@ -73,31 +91,7 @@ gunicorn -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000 --wor
 
 ```
 
-## 初期構成案構造
-```
-.
-├── backend
-│   ├── app
-│   ├── pytest.ini
-│   ├── requirements.txt
-│   ├── tests
-│   └── uvicorn_config.py
-├── docs
-│   └── feature
-├── frontend
-│   ├── dist
-│   ├── index.html
-│   ├── jest.config.js
-│   ├── node_modules
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── public
-│   ├── src
-│   ├── tsconfig.json
-│   ├── types
-│   └── vite.config.ts
-└── README.md
-```
+
 
 <details>
 <summary>作成中メモ</summary>
