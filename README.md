@@ -114,4 +114,14 @@ git checkout main
 
 まさに「ぶっつづけ一気に push しなくても大丈夫」というのがローカル Git の強み
 
+---
+
+localでgit管理のもと作成したら  
+
+git remote add origin ~  
+
+git push -u origin main
+
+git push --all -u origin
+
 </details>
