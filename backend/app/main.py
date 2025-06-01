@@ -1,7 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-# ルーターをインポート
 from .routes import qr
 
 app = FastAPI(
@@ -16,16 +14,15 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        # 本番ドメインが決まれば都度追加
+        # 必要に応じて、本番環境のドメインを追加
     ],
     allow_methods=["POST", "GET", "OPTIONS"],
     allow_headers=["*"],
 )
 
-# 既存の /ping エンドポイント
 @app.get("/ping", summary="ヘルスチェック用")
 async def ping():
     return {"message": "pong"}
 
-# ここで qr ルーターをマウント
+# QR 生成ルーターをマウント
 app.include_router(qr.router, prefix="/qr")

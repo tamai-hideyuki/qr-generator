@@ -1,6 +1,7 @@
+// frontend/tsconfig.json
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ESNext",
     "module": "ESNext",
     "jsx": "react-jsx",
     "moduleResolution": "node",
@@ -11,8 +12,14 @@
     "typeRoots": [
       "./node_modules/@types",
       "./types"
+    ],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
     ]
   },
+
   "include": [
     "src",
     "types"

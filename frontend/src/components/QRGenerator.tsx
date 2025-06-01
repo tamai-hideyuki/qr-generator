@@ -1,24 +1,46 @@
 'use client';
 import { useState } from 'react';
-import { QRCodeCanvas } from 'qrcode.react';
+import axios from 'axios';
 
 export default function QRGenerator() {
     const [url, setUrl] = useState('');
-    const [showQR, setShowQR] = useState(false);
+    const [qrBlobUrl, setQrBlobUrl] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleGenerate = () => {
-        if (url.trim()) {
-            setShowQR(true);
+    const handleGenerate = async () => {
+        if (!url.trim()) return;
+
+        setIsLoading(true);
+        setError(null);
+        setQrBlobUrl(null);
+
+        try {
+            // FastAPI のエンドポイントを呼び出し (戻り値は Blob 型)
+            const response = await axios.post<Blob>(
+                'http://localhost:8000/qr/generate_qr',
+                { data: url, size: 256 },
+                { responseType: 'blob' }
+            );
+
+            // 受け取った Blob をオブジェクトURLに変換
+            const blob = new Blob([response.data], { type: 'image/png' });
+            const objectUrl = URL.createObjectURL(blob);
+            setQrBlobUrl(objectUrl);
+        } catch (e) {
+            console.error(e);
+            setError('QRコードの生成に失敗しました。');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleDownload = () => {
-        const canvas = document.getElementById('qr-code') as HTMLCanvasElement;
-        const pngUrl = canvas.toDataURL('image/png');
-        const downloadLink = document.createElement('a');
-        downloadLink.href = pngUrl;
-        downloadLink.download = 'qr_code.png';
-        downloadLink.click();
+        if (!qrBlobUrl) return;
+        const link = document.createElement('a');
+        link.href = qrBlobUrl;
+        link.download = 'qr_code.png';
+        link.click();
     };
 
     return (
@@ -35,15 +57,24 @@ export default function QRGenerator() {
                 />
                 <button
                     onClick={handleGenerate}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+                    disabled={isLoading}
                 >
-                    生成
+                    {isLoading ? '生成中…' : '生成'}
                 </button>
             </div>
 
-            {showQR && (
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+
+            {qrBlobUrl && (
                 <div className="flex flex-col items-center">
-                    <QRCodeCanvas id="qr-code" value={url} size={256} includeMargin={true} />
+                    <img
+                        src={qrBlobUrl}
+                        alt="Generated QR Code"
+                        className="border border-gray-300"
+                        width={256}
+                        height={256}
+                    />
                     <button
                         onClick={handleDownload}
                         className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
