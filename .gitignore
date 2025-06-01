@@ -1,0 +1,36 @@
+# ====== General ======
+*.log
+*.pyc
+__pycache__/
+.DS_Store
+.env
+.vscode/
+
+# ====== Python / FastAPI ======
+/backend/venv/
+/backend/.mypy_cache/
+/backend/.pytest_cache/
+/backend/__pycache__/
+/backend/env/
+/backend/.env
+
+# ====== Pipenv or Poetry (if used) ======
+Pipfile.lock
+poetry.lock
+
+# ====== Node / React Frontend ======
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.env
+/frontend/.next/           # for Next.js
+/frontend/.parcel-cache/   # if using Parcel
+/frontend/.vite/           # if using Vite
+
+# ====== Build artifacts ======
+*.bak
+*.tmp
+*.swp
+
+# ====== Docker (optional) ======
+*.pid
+docker-compose.override.yml
