@@ -1,41 +1,58 @@
-# ====== General ======
-*.log
-*.pyc
-__pycache__/
+# ====== 根ディレクトリ共通 ======
 .DS_Store
 .env
 .vscode/
+.idea/
+*.log
 
-# ====== Python / FastAPI ======
-/backend/venv/
-/backend/.mypy_cache/
-/backend/.pytest_cache/
+# ====== Backend（Python / FastAPI） ======
+# 仮想環境
+/backend/.venv/
+# キャッシュ・バイトコード
 /backend/__pycache__/
-/backend/env/
-/backend/.env
+/backend/**/*.py[cod]
+# pytest／mypy キャッシュ
+/backend/.pytest_cache/
+/backend/.mypy_cache/
+/backend/.coverage
+# pipenv／poetry（使わない場合は不要）
+/backend/Pipfile.lock
+/backend/poetry.lock
 
-# ====== Pipenv or Poetry (if used) ======
-Pipfile.lock
-poetry.lock
-
-# ====== Node / React Frontend ======
+# ====== Frontend（Node / Vite / React） ======
+# Node modules
 /frontend/node_modules/
+# Vite 出力ディレクトリ
 /frontend/dist/
+/frontend/.vite/
+# ビルド成果物
+/frontend/build/
+/frontend/.out/
+# 環境変数ファイル
 /frontend/.env
-/frontend/.next/           # for Next.js
-/frontend/.parcel-cache/   # if using Parcel
-/frontend/.vite/           # if using Vite
+# キャッシュ
+/frontend/.cache/
+# VSCode／IDE が吐く一時ファイル
+/frontend/.DS_Store
+/frontend/*.log
 
-# ====== Build artifacts ======
-*.bak
-*.tmp
-*.swp
+# ====== TypeScript / IDE ======
+# トランスパイルの成果
+/frontend/**/*.js
+/frontend/**/*.js.map
+/frontend/**/*.d.ts
+# tsconfig で自動生成されるファイル（あれば）
+/frontend/tsconfig.tsbuildinfo
 
-# ====== Docker (optional) ======
-*.pid
+# ====== Docker ======
 docker-compose.override.yml
-# Docker-generated files
-**/__pycache__/
-**/node_modules/
-**/*.log
-docker/.env
+# コンテナ作業フォルダ（マウント先など）
+docker/tmp/
+# イメージ・コンテナ関連
+**/Dockerfile.*
+
+# ====== 一時ファイル・バックアップ ======
+*.swp
+*.tmp
+*.bak
+*.orig
