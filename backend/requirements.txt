@@ -1,0 +1,5 @@
+fastapi
+uvicorn[standard]
+qrcode[pil]         # 今後 QR 生成機能を使うので
+python-multipart    # 必要に応じて追加
+
