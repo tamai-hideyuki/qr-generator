@@ -1,35 +1,73 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function QRGenerator() {
     const [url, setUrl] = useState('');
     const [qrBlobUrl, setQrBlobUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [validationError, setValidationError] = useState<string | null>(null);
+    const [apiError, setApiError] = useState<string | null>(null);
+
+    // URL の有効性をチェックする関数
+    const isValidUrl = (input: string): boolean => {
+        try {
+            // URL コンストラクタでチェック（https:// や http:// を含める必要）
+            new URL(input);
+            return true;
+        } catch {
+            return false;
+        }
+    };
+
+    // 入力 URL が変更されるたびにバリデーションエラーをリセット
+    useEffect(() => {
+        setValidationError(null);
+        setApiError(null);
+        setQrBlobUrl(null);
+    }, [url]);
 
     const handleGenerate = async () => {
-        if (!url.trim()) return;
+        // 空文字チェック
+        if (!url.trim()) {
+            setValidationError('URL を入力してください。');
+            return;
+        }
+        // フォーマットチェック
+        if (!isValidUrl(url.trim())) {
+            setValidationError('有効な URL を入力してください（例: https://example.com）。');
+            return;
+        }
 
+        // バリデーションOKなら、QR 生成処理へ
         setIsLoading(true);
-        setError(null);
+        setApiError(null);
         setQrBlobUrl(null);
 
         try {
-            // FastAPI のエンドポイントを呼び出し (戻り値は Blob 型)
             const response = await axios.post<Blob>(
                 'http://localhost:8000/qr/generate_qr',
-                { data: url, size: 256 },
+                { data: url.trim(), size: 256 },
                 { responseType: 'blob' }
             );
 
-            // 受け取った Blob をオブジェクトURLに変換
+            // レスポンスコードが 200 以外でも catch に飛ぶので、ここでは Blob 生成だけ
             const blob = new Blob([response.data], { type: 'image/png' });
             const objectUrl = URL.createObjectURL(blob);
             setQrBlobUrl(objectUrl);
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            setError('QRコードの生成に失敗しました。');
+            // Axios のエラーかどうかを判定
+            if (e.response) {
+                // サーバーがエラーコードを返してきた
+                setApiError(`サーバーエラー: ${e.response.status}`);
+            } else if (e.request) {
+                // リクエストは送ったがレスポンスが帰ってこない
+                setApiError('サーバーと通信できません。ネットワークをご確認ください。');
+            } else {
+                // 送信前のエラー
+                setApiError('不明なエラーが発生しました。');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -64,8 +102,15 @@ export default function QRGenerator() {
                 </button>
             </div>
 
-            {error && <p className="text-red-500 mb-4">{error}</p>}
+            {/* バリデーションエラーの表示 */}
+            {validationError && (
+                <p className="text-red-500 mb-4">{validationError}</p>
+            )}
 
+            {/* API エラーの表示 */}
+            {apiError && <p className="text-red-500 mb-4">{apiError}</p>}
+
+            {/* QRコード表示 & ダウンロードボタン */}
             {qrBlobUrl && (
                 <div className="flex flex-col items-center">
                     <img
